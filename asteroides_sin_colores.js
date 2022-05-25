@@ -43,6 +43,18 @@ function shootLaser(){
         ship.canShoot=false;
     }
 }
+function drawThruster(){
+    if(ship.thrusting){
+        ctx.fillStyle="red";
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(ship.x-ship.r*(2/3*Math.cos(ship.angle)+0.5*Math.sin(ship.angle)),ship.y+ship.r*(2/3*Math.sin(ship.angle)-0.5*Math.cos(ship.angle)));
+        ctx.lineTo(ship.x-ship.r*5/3*Math.cos(ship.angle),ship.y+ship.r*5/3*Math.sin(ship.angle));
+        ctx.lineTo(ship.x-ship.r*(2/3*Math.cos(ship.angle)-0.5*Math.sin(ship.angle)),ship.y+ship.r*(2/3*Math.sin(ship.angle)+0.5*Math.cos(ship.angle)));
+        ctx.closePath();
+        ctx.fill();
+    }
+}
 function update(){
     ctx.clearRect(0,0,gamesEl.width,gamesEl.height);
     drawShip();
@@ -55,6 +67,7 @@ function update(){
             ctx.fill();
         }        
     }
+    drawThruster();
     requestAnimationFrame(update);
 }
 update();
@@ -69,6 +82,13 @@ function keydown(e){
         case 'd':
             ship.angle+=0.1;
             break;
+        case 's':
+            ship.thrusting=true;
+            ship.thrust.x+=0.1*Math.cos(ship.angle);
+            ship.thrust.y-=0.1*Math.sin(ship.angle);
+            ship.x+=ship.thrust.x;
+            ship.y+=ship.thrust.y;
+            break;
     }
 }
 function keyup(e){
@@ -78,6 +98,14 @@ function keyup(e){
             if(ship.lasers.length>=2){
                 ship.lasers.length=0;
             }
-            break
+            break;
+        case's':
+            ship.thrusting=false;
+            ship.thrust.x-=0.1*Math.cos(ship.angle);
+            ship.thrust.y+=0.1*Math.sin(ship.angle);
+            ship.x-=ship.thrust.x;
+            ship.y-=ship.thrust.y;
+            break;
+
     }
 }
