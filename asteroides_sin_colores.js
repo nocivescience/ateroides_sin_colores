@@ -46,13 +46,23 @@ function shootLaser(){
 function drawThruster(){
     if(ship.thrusting){
         ctx.fillStyle="red";
+        ctx.strokeStyle="yellow";
         ctx.lineWidth=2;
         ctx.beginPath();
         ctx.moveTo(ship.x-ship.r*(2/3*Math.cos(ship.angle)+0.5*Math.sin(ship.angle)),ship.y+ship.r*(2/3*Math.sin(ship.angle)-0.5*Math.cos(ship.angle)));
-        ctx.lineTo(ship.x-ship.r*5/3*Math.cos(ship.angle),ship.y+ship.r*5/3*Math.sin(ship.angle));
         ctx.lineTo(ship.x-ship.r*(2/3*Math.cos(ship.angle)-0.5*Math.sin(ship.angle)),ship.y+ship.r*(2/3*Math.sin(ship.angle)+0.5*Math.cos(ship.angle)));
+        ctx.lineTo(ship.x+Math.random()*10-ship.r*5/3*Math.cos(ship.angle),ship.y+ship.r*5/3*Math.sin(ship.angle));
         ctx.closePath();
         ctx.fill();
+        ctx.stroke();
+        //thruster
+    if(ship.thrusting){
+        ship.thrust.x+=ship.thrust.x*Math.cos(ship.angle)/30;
+        ship.thrust.y-=ship.thrust.y*Math.sin(ship.angle)/30;
+    }else{
+        ship.thrust.x-=.6*ship.thrust.x/30;
+        ship.thrust.y-=.6*ship.thrust.y/30;
+    }   
     }
 }
 function update(){
@@ -65,7 +75,7 @@ function update(){
             ctx.beginPath();
             ctx.arc(ship.lasers[i].x+=ship.lasers[i].vx,ship.lasers[i].y+=ship.lasers[i].vy,4*Math.random(),0,Math.PI*2,true);
             ctx.fill();
-        }        
+        }     
     }
     drawThruster();
     requestAnimationFrame(update);
