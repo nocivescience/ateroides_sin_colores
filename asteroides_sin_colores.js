@@ -30,7 +30,7 @@ function newShip(){
     };
 }
 function shootLaser(){
-    if(ship.canShoot||ship.lasers.length<2){
+    if(ship.canShoot||ship.lasers.length<20){
         ship.lasers.push({
             x:ship.x+4/3*ship.r*Math.cos(ship.angle),
             y:ship.y-4/3*ship.r*Math.sin(ship.angle),
@@ -56,19 +56,16 @@ function drawThruster(){
         ctx.fill();
         ctx.stroke();
         //thruster
+    }
     if(ship.thrusting){
         ship.thrust.x+=ship.thrust.x*Math.cos(ship.angle)/30;
         ship.thrust.y-=ship.thrust.y*Math.sin(ship.angle)/30;
     }else{
         ship.thrust.x-=.6*ship.thrust.x/30;
-        ship.thrust.y-=.6*ship.thrust.y/30;
-    }   
+        ship.thrust.y-=.6*ship.thrust.y/30;   
     }
 }
-function update(){
-    ctx.clearRect(0,0,gamesEl.width,gamesEl.height);
-    drawShip();
-    //lasers
+function drawLaser(){
     for(let i=0;i<ship.lasers.length;i++){
         if(ship.lasers[i].explodeTime==0){
             ctx.fillStyle="white";
@@ -77,20 +74,27 @@ function update(){
             ctx.fill();
         }     
     }
+}
+function update(){
+    ctx.clearRect(0,0,gamesEl.width,gamesEl.height);
+    drawShip();
+    //lasers
+    drawLaser();
     drawThruster();
     requestAnimationFrame(update);
 }
 update();
 function keydown(e){
+    e.preventDefault();
     switch(e.key){
         case 'p':
             shootLaser();
             break;
         case 'a':
-            ship.angle-=0.1;
+            ship.angle=0.1;
             break;
         case 'd':
-            ship.angle+=0.1;
+            ship.angle=-0.1;
             break;
         case 's':
             ship.thrusting=true;
